@@ -51,7 +51,7 @@ class Disassembler(object):
     def _log(self, size, mnem, operand=None):
         """
         Output immediate operands prepended with the '#' character.
-        Output addresse operands prepended with the '$' character.
+        Output address operands prepended with the '$' character.
         """
         token = mnem.split()[0]
 
