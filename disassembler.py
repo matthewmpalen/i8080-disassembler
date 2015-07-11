@@ -4,12 +4,18 @@ import json
 import logging
 import struct
 
-# External
-
-# Local
-from opcodes import Opcode
-
 def get_instructions():
+    """
+    JSON array of arrays from file.
+    Each instruction is represented as an array, like:
+      ["mvi    c,",  2]
+
+    where the first element is the mnemonic and the second is the size of the 
+    the instruction in bytes.
+
+    There must be a total of 256 instructions to be complete. The array indices 
+    correspond to the opcodes of Intel 8080 (i.e. 0x00 through 0xff)
+    """
     try:
         with open('instructions.json') as f:
             file_data = json.load(f)
@@ -43,6 +49,10 @@ class Disassembler(object):
         logging.getLogger('disassembler')
 
     def _log(self, size, mnem, operand=None):
+        """
+        Output immediate operands prepended with the '#' character.
+        Output addresse operands prepended with the '$' character.
+        """
         token = mnem.split()[0]
 
         if size == 1:
@@ -78,8 +88,8 @@ class Disassembler(object):
                 operand = struct.unpack('<H', self._data[start:end])[0]
 
             msg = self._log(size, mnem, operand=operand)
-
             self._index += size
+
             print(msg)
             logging.debug(msg)
 
