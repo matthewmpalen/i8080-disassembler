@@ -83,10 +83,13 @@ class Disassembler(object):
             print(msg)
             logging.debug(msg)
 
-if __name__ == '__main__':
+def main():
     arg_parser = ArgumentParser()
     arg_parser.add_argument('filename', help='File to be disassembled')
     args = arg_parser.parse_args()
     
     d = Disassembler(args.filename)
     d.run()
+
+if __name__ == '__main__':
+    main()
