@@ -9,9 +9,6 @@ import struct
 # Local
 from opcodes import Opcode
 
-class UnknownInstructionError(Exception):
-    pass
-
 def get_instructions():
     try:
         with open('instructions.json') as f:
@@ -44,36 +41,6 @@ class Disassembler(object):
         logging.basicConfig(level=logging.WARNING, 
             filename='logs/disassembler.py.log', filemode='w')
         logging.getLogger('disassembler')
-
-    def _log_message(self, index, mnem, register=None, address=None, 
-            immediate=None, register_pair=None, reset=None):
-        if register and immediate:
-            return '{0:0{1}x} {2:<6} {3},#{4:#04x}'.format(index, self._digits, 
-                mnem, register, immediate)
-        elif register and address:
-            return '{0:0{1}x} {2:<6} {3},${4:x}'.format(index, self._digits, 
-                mnem.ljust(5), register, address)
-        elif address:
-            if mnem in ('OUT', 'IN'):
-                return '{0:0{1}x} {2:<6} ${3:02x}'.format(index, self._digits, 
-                    mnem, address)
-            else:
-                return '{0:0{1}x} {2:<6} ${3:04x}'.format(index, self._digits, 
-                    mnem, address)
-        elif register_pair:
-            return '{0:0{1}x} {2:<6} {3},{4}'.format(index, self._digits, mnem, 
-                register_pair[0], register_pair[1])
-        elif register:
-            return '{0:0{1}x} {2:<6} {3}'.format(index, self._digits, mnem, 
-                register)
-        elif immediate:
-            return '{0:0{1}x} {2:<6} #{3:#04x}'.format(index, self._digits, 
-                mnem, immediate)
-        elif reset:
-            return '{0:0{1}x} {2:<6} {3:x}'.format(index, self._digits, mnem, 
-                reset)
-        else:
-            return '{0:0{1}x} {2:<6}'.format(index, self._digits, mnem)
 
     def _log(self, index, size, mnem, operand=None):
         token = mnem.split()[0]
