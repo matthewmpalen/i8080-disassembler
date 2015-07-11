@@ -30,6 +30,9 @@ def get_instructions():
     return file_data
 
 INSTRUCTION_TABLE = get_instructions()
+logging.basicConfig(level=logging.WARNING, filename='logs/disassembler.py.log', 
+    filemode='w')
+LOGGER = logging.getLogger('disassembler')
 
 class Disassembler(object):
     def __init__(self, filename):
@@ -43,10 +46,6 @@ class Disassembler(object):
         self._index = 0
         self._end = len(self._data)
         self._digits = len(str(len(self._data)))
-
-        logging.basicConfig(level=logging.WARNING, 
-            filename='logs/disassembler.py.log', filemode='w')
-        logging.getLogger('disassembler')
 
     def _log(self, size, mnem, operand=None):
         """
@@ -91,7 +90,7 @@ class Disassembler(object):
             self._index += size
 
             print(msg)
-            logging.debug(msg)
+            LOGGER.debug(msg)
 
 def main():
     arg_parser = ArgumentParser()
