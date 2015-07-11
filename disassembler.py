@@ -47,7 +47,7 @@ class Disassembler(object):
         self._end = len(self._data)
         self._digits = len(str(len(self._data)))
 
-    def _log(self, size, mnem, operand=None):
+    def _output(self, size, mnem, operand=None):
         """
         Output immediate operands prepended with the '#' character.
         Output address operands prepended with the '$' character.
@@ -86,7 +86,7 @@ class Disassembler(object):
                 end = start + 2
                 operand = struct.unpack('<H', self._data[start:end])[0]
 
-            msg = self._log(size, mnem, operand=operand)
+            msg = self._output(size, mnem, operand=operand)
             self._index += size
 
             print(msg)
