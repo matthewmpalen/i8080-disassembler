@@ -42,25 +42,25 @@ class Disassembler(object):
             filename='logs/disassembler.py.log', filemode='w')
         logging.getLogger('disassembler')
 
-    def _log(self, index, size, mnem, operand=None):
+    def _log(self, size, mnem, operand=None):
         token = mnem.split()[0]
 
         if size == 1:
-            return '{0:0{1}x} {2}'.format(index, self._digits, mnem)
+            return '{0:0{1}x} {2}'.format(self._index, self._digits, mnem)
         elif size == 2:
             if token in ('out', 'in'):
-                return '{0:0{1}x} {2}${3:02x}'.format(index, self._digits, 
-                    mnem, operand)
+                return '{0:0{1}x} {2}${3:02x}'.format(self._index, 
+                    self._digits, mnem, operand)
             else:
-                return '{0:0{1}x} {2}#{3:02x}'.format(index, self._digits, 
-                    mnem, operand)
+                return '{0:0{1}x} {2}#{3:02x}'.format(self._index, 
+                    self._digits, mnem, operand)
         elif size == 3:
             if token in ('lxi'):
-                return '{0:0{1}x} {2}#{3:04x}'.format(index, self._digits, 
-                    mnem, operand)
+                return '{0:0{1}x} {2}#{3:04x}'.format(self._index, 
+                    self._digits, mnem, operand)
             else:
-                return '{0:0{1}x} {2}${3:04x}'.format(index, self._digits, 
-                    mnem, operand)
+                return '{0:0{1}x} {2}${3:04x}'.format(self._index, 
+                    self._digits, mnem, operand)
 
     def run(self):
         while self._index < self._end:
@@ -77,7 +77,7 @@ class Disassembler(object):
                 end = start + 2
                 operand = struct.unpack('<H', self._data[start:end])[0]
 
-            msg = self._log(self._index, size, mnem, operand=operand)
+            msg = self._log(size, mnem, operand=operand)
 
             self._index += size
             print(msg)
