@@ -4,6 +4,10 @@ import json
 import logging
 import struct
 
+logging.basicConfig(level=logging.WARNING, filename='logs/disassembler.py.log', 
+    filemode='w')
+LOGGER = logging.getLogger('disassembler')
+
 def get_instructions():
     """
     JSON array of arrays from file.
@@ -30,9 +34,6 @@ def get_instructions():
     return file_data
 
 INSTRUCTION_TABLE = get_instructions()
-logging.basicConfig(level=logging.WARNING, filename='logs/disassembler.py.log', 
-    filemode='w')
-LOGGER = logging.getLogger('disassembler')
 
 class Disassembler(object):
     def __init__(self, filename):
