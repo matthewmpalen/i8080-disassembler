@@ -20,11 +20,11 @@ def get_instructions():
         with open('instructions.json') as f:
             file_data = json.load(f)
     except FileNotFoundError as e:
-        logging.error(e)
+        LOGGER.error(e)
         exit()
 
     if len(file_data) != 256:
-        logging.error('Incomplete instruction set')
+        LOGGER.error('Incomplete instruction set')
         exit()
 
     return file_data
@@ -40,7 +40,7 @@ class Disassembler(object):
             with open(filename, 'rb') as f:
                 self._data = f.read()
         except FileNotFoundError as e:
-            logging.error(e)
+            LOGGER.error(e)
             exit()
 
         self._index = 0
