@@ -46,7 +46,7 @@ class Disassembler(object):
 
         self._index = 0
         self._end = len(self._data)
-        self._digits = len(str(len(self._data)))
+        self._digits = len(str(self._end))
 
     def _output(self, size, mnem, operand=None):
         """
