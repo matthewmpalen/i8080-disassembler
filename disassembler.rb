@@ -50,7 +50,7 @@ class Disassembler
     @digits = @end.to_s.length
   end
 
-  def output(size, mnem, operand=None)
+  def output(size, mnem, operand=nil)
 <<-DOC
     Output immediate operands prepended with the '#' character.
     Output address operands prepended with the '$' character.
