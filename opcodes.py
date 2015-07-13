@@ -1,10 +1,6 @@
 # Python
 from enum import IntEnum, unique
 
-# External
-
-# Local
-
 @unique
 class Opcode(IntEnum):
     NOP      = 0x00
