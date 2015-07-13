@@ -6,6 +6,7 @@ import (
     "fmt"
     "io/ioutil"
     "reflect"
+    "strings"
 )
 
 type jsonInstructionTable [][]interface{}
@@ -86,7 +87,7 @@ func (d Disassembler) output1Byte(instr Instruction) string {
 func (d Disassembler) output2Byte(instr Instruction, operand byte) string {
     special := []string{"out", "in"}
     for _, s := range special {
-        if instr.mnem == s {
+        if strings.EqualFold(instr.mnem, s) {
             return fmt.Sprintf("%04x %s$%02x", d.index, instr.mnem, operand)
         }
     }
@@ -95,7 +96,7 @@ func (d Disassembler) output2Byte(instr Instruction, operand byte) string {
 }
 
 func (d Disassembler) output3Byte(instr Instruction, operand []byte) string {
-    if instr.mnem == "lxi" {
+    if strings.EqualFold(instr.mnem, "lxi") {
         return fmt.Sprintf("%04x %s#%04x", d.index, instr.mnem, operand)
     }
 
