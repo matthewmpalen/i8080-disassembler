@@ -3,7 +3,7 @@ require "json"
 require "optparse"
 require "logger"
 
-LOGGER = Logger.new("logs/disassembler.rb.log")
+LOGGER = Logger.new(File.open("logs/disassembler.rb.log", "w"))
 LOGGER.level = Logger::WARN
 
 def get_instructions
@@ -19,16 +19,16 @@ def get_instructions
   correspond to the opcodes of Intel 8080 (i.e. 0x00 through 0xff)
 DOC
   begin
-      f = File.read("instructions.json")
-      file_data = JSON.parse(f)
+    f = File.read("instructions.json")
+    file_data = JSON.parse(f)
   rescue Errno::ENOENT => e
-      LOGGER.error(e)
-      exit
+    LOGGER.error(e)
+    exit
   end
 
   unless file_data.length == 256
-      LOGGER.error('Incomplete instruction set')
-      exit
+    LOGGER.error('Incomplete instruction set')
+    exit
   end
 
   return file_data
@@ -40,6 +40,9 @@ class Disassembler
   def initialize(filename)
     begin
       @data = File.binread(filename)
+    rescue TypeError => e
+      LOGGER.error("You must provide a valid filename")
+      exit
     rescue Errno::ENOENT => e
       LOGGER.error(e)
       exit
