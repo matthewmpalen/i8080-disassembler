@@ -13,7 +13,7 @@ def get_instructions
     ["mvi    c,",  2]
 
   where the first element is the mnemonic and the second is the size of the 
-  the instruction in bytes.
+  instruction in bytes.
 
   There must be a total of 256 instructions to be complete. The array indices 
   correspond to the opcodes of Intel 8080 (i.e. 0x00 through 0xff)
