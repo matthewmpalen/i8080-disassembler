@@ -104,8 +104,8 @@ func (d Disassembler) output3Byte(instr Instruction, operand []byte) string {
 
 func (d Disassembler) Run() {
     for d.index < d.end {
-        byte := d.data[d.index]
-        instr := INSTRUCTION_TABLE[byte]
+        byte_ := d.data[d.index]
+        instr := INSTRUCTION_TABLE[byte_]
 
         var msg string
 
