@@ -70,7 +70,7 @@ DOC
         return "%04x %s#%02x" % [@index, mnem, operand]
       end
     when 3
-      if ['lxi'].include? token
+      if token == "lxi"
         return "%04x %s#%04x" % [@index, mnem, operand]
       else
         return "%04x %s$%04x" % [@index, mnem, operand]

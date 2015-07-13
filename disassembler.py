@@ -65,7 +65,7 @@ class Disassembler(object):
                 return '{0:0{1}x} {2}#{3:02x}'.format(self._index, 
                     self._digits, mnem, operand)
         elif size == 3:
-            if token in ('lxi'):
+            if token == 'lxi':
                 return '{0:0{1}x} {2}#{3:04x}'.format(self._index, 
                     self._digits, mnem, operand)
             else:
