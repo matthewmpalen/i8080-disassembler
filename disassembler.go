@@ -85,18 +85,16 @@ func (d Disassembler) output1Byte(instr Instruction) string {
 }
 
 func (d Disassembler) output2Byte(instr Instruction, operand byte) string {
-    special := []string{"out", "in"}
-    for _, s := range special {
-        if strings.EqualFold(instr.mnem, s) {
-            return fmt.Sprintf("%04x %s$%02x", d.index, instr.mnem, operand)
-        }
+    if strings.Contains(instr.mnem, "out") || 
+        strings.Contains(instr.mnem, "in") {
+        return fmt.Sprintf("%04x %s$%02x", d.index, instr.mnem, operand)
     }
 
     return fmt.Sprintf("%04x %s#%02x", d.index, instr.mnem, operand)
 }
 
 func (d Disassembler) output3Byte(instr Instruction, operand []byte) string {
-    if strings.EqualFold(instr.mnem, "lxi") {
+    if strings.Contains(instr.mnem, "lxi") {
         return fmt.Sprintf("%04x %s#%04x", d.index, instr.mnem, operand)
     }
 
