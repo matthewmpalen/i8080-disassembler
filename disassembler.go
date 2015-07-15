@@ -5,8 +5,14 @@ import (
     "flag"
     "fmt"
     "io/ioutil"
+    "log"
+    "os"
     "reflect"
     "strings"
+)
+
+var (
+    INSTRUCTION_TABLE [256]Instruction
 )
 
 type jsonInstructionTable [][]interface{}
@@ -23,9 +29,9 @@ type Disassembler struct {
     digits int
 }
 
-func check(e error) {
-    if e != nil {
-        panic(e)
+func check(err error) {
+    if err != nil {
+        log.Panicln(err)
     }
 }
 
@@ -120,12 +126,26 @@ func (d Disassembler) Run() {
             msg = d.output3Byte(instr, operand)
         }
 
-        fmt.Println(msg)
         d.index += instr.size
+
+        fmt.Println(msg)
+        log.Println(msg)
     }
 }
 
-var INSTRUCTION_TABLE = getInstructions()
+func Init() {
+    f, err := os.OpenFile("logs/disassembler.go.log", os.O_APPEND | 
+        os.O_CREATE | os.O_RDWR, 0666)
+
+    if err != nil {
+        panic(err)
+    }
+
+    defer f.Close()
+    log.SetOutput(f)
+
+    INSTRUCTION_TABLE = getInstructions()
+}
 
 func main() {
     var filename string
@@ -133,6 +153,7 @@ func main() {
         "File to be disassembled")
     flag.Parse()
 
+    Init()
     d := NewDisassembler(filename)
     d.Run()
 }
