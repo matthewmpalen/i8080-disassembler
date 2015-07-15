@@ -29,7 +29,6 @@ class Disassembler {
     }
 
     private static Logger createLogger() {
-        Logger logger = Logger.getLogger(Disassembler.class.getName());
         Handler fh = null;
 
         try {
@@ -39,6 +38,8 @@ class Disassembler {
             System.exit(0);
         }
 
+        Logger logger = Logger.getLogger(Disassembler.class.getName());
+        logger.setUseParentHandlers(false);
         SimpleFormatter formatter = new SimpleFormatter();
         fh.setFormatter(formatter);
         logger.addHandler(fh);
