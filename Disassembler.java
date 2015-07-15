@@ -4,9 +4,15 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.logging.Handler;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 class Disassembler {
-    private static Instruction[] INSTRUCTION_TABLE = getInstructions();
+    private static final Logger logger = createLogger();
+    private static final Instruction[] INSTRUCTION_TABLE = getInstructions();
     private byte[] data;
     private int index;
     private int end;
@@ -20,6 +26,24 @@ class Disassembler {
             mnem = m;
             size = s;
         }
+    }
+
+    private static Logger createLogger() {
+        Logger logger = Logger.getLogger(Disassembler.class.getName());
+        Handler fh = null;
+
+        try {
+            fh = new FileHandler("logs/Disassembler.java.log");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(0);
+        }
+
+        SimpleFormatter formatter = new SimpleFormatter();
+        fh.setFormatter(formatter);
+        logger.addHandler(fh);
+        
+        return logger;
     }
 
     /*
@@ -130,6 +154,7 @@ class Disassembler {
             index += instr.size;
 
             System.out.println(msg);
+            logger.log(Level.INFO, msg);
         }
     }
 
