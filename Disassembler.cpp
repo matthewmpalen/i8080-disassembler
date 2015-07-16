@@ -23,8 +23,10 @@ private:
     unsigned int digits;
 
     string output1Byte(const Instruction& instr) const;
-    string output2Byte(const Instruction& instr, unsigned char operand) const;
-    string output3Byte(const Instruction& instr, unsigned char operand[2]) const;
+    string output2Byte(const Instruction& instr, 
+            const unsigned char operand) const;
+    string output3Byte(const Instruction& instr, 
+            const unsigned char operand[2]) const;
 public:
     Disassembler(char* filename);
     void run();
@@ -92,7 +94,7 @@ string Disassembler::output1Byte(const Instruction& instr) const {
 }
 
 string Disassembler::output2Byte(const Instruction& instr, 
-        unsigned char operand) const {
+        const unsigned char operand) const {
     const int size = 22;
     char buffer[size];
 
@@ -109,7 +111,7 @@ string Disassembler::output2Byte(const Instruction& instr,
 }
 
 string Disassembler::output3Byte(const Instruction& instr, 
-        unsigned char operand[2]) const {
+        const unsigned char operand[2]) const {
     const int size = 22;
     char buffer[size];
 
