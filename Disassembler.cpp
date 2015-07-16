@@ -9,7 +9,11 @@ using namespace std;
 struct Instruction {
     string mnem;
     unsigned int size;
+
+    Instruction(const string& m, unsigned int s);
 };
+
+Instruction::Instruction(const string& m, unsigned int s): mnem(m), size(s) {};
 
 class Disassembler {
 private:
@@ -18,9 +22,9 @@ private:
     size_t end;
     unsigned int digits;
 
-    string output1Byte(Instruction instr) const;
-    string output2Byte(Instruction instr, unsigned char operand) const;
-    string output3Byte(Instruction instr, unsigned char operand[2]) const;
+    string output1Byte(const Instruction& instr) const;
+    string output2Byte(const Instruction& instr, unsigned char operand) const;
+    string output3Byte(const Instruction& instr, unsigned char operand[2]) const;
 public:
     Disassembler(char* filename);
     void run();
@@ -51,16 +55,16 @@ vector<Instruction> getInstructions() {
             continue;
         }
 
-        size_t first = line.find("\"") + 1;
-        size_t last = line.find("\",");
-        string mnem = line.substr(first, last - first);
-        unsigned int size = stoi(line.substr(20, 1));
+        const size_t first = line.find("\"") + 1;
+        const size_t last = line.find("\",");
+        const string mnem = line.substr(first, last - first);
+        const unsigned int size = stoi(line.substr(20, 1));
 
-        Instruction instr;
-        instr.mnem = mnem;
-        instr.size = size;
+        const Instruction instr(mnem, size);
         table.push_back(instr);
     }
+
+    f.close();
 
     return table;
 }
@@ -75,19 +79,21 @@ Disassembler::Disassembler(char* filename): index(0), digits(4) {
     data = vector<char>(istreambuf_iterator<char>(f), 
         istreambuf_iterator<char>());
 
+    f.close();
+
     end = data.size();
 }
 
-string Disassembler::output1Byte(Instruction instr) const {
-    int size = 22;
+string Disassembler::output1Byte(const Instruction& instr) const {
+    const int size = 22;
     char buffer[size];
     snprintf(buffer, size, "%04x %s", index, instr.mnem.c_str());
     return string(buffer);
 }
 
-string Disassembler::output2Byte(Instruction instr, unsigned char operand) 
-    const {
-    int size = 22;
+string Disassembler::output2Byte(const Instruction& instr, 
+        unsigned char operand) const {
+    const int size = 22;
     char buffer[size];
 
     if (instr.mnem.find("out") != string::npos || 
@@ -102,9 +108,9 @@ string Disassembler::output2Byte(Instruction instr, unsigned char operand)
     return string(buffer);
 }
 
-string Disassembler::output3Byte(Instruction instr, unsigned char operand[2]) 
-    const {
-    int size = 22;
+string Disassembler::output3Byte(const Instruction& instr, 
+        unsigned char operand[2]) const {
+    const int size = 22;
     char buffer[size];
 
     if (instr.mnem.find("lxi") != string::npos) {
@@ -118,12 +124,12 @@ string Disassembler::output3Byte(Instruction instr, unsigned char operand[2])
     return string(buffer);
 }
 
-vector<Instruction> instructionTable = getInstructions();
+const vector<Instruction> instructionTable = getInstructions();
 
 void Disassembler::run() {
     while (index < end) {
-        unsigned char byte = data[index];
-        Instruction instr = instructionTable[byte];
+        const unsigned char byte = data[index];
+        const Instruction instr = instructionTable[byte];
         string msg;
 
         if (instr.size == 1) {
