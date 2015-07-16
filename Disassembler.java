@@ -19,8 +19,8 @@ class Disassembler {
     private int digits;
 
     private static class Instruction {
-        public String mnem;
-        public int size;
+        public final String mnem;
+        public final int size;
 
         public Instruction(String m, int s) {
             mnem = m;
@@ -73,12 +73,12 @@ class Disassembler {
                     continue;
                 }
 
-                int first = line.indexOf("\"") + 1;
-                int last = line.indexOf("\",");
-                String mnem = line.substring(first, last);
-                int size = Character.getNumericValue(line.charAt(20));
+                final int first = line.indexOf("\"") + 1;
+                final int last = line.indexOf("\",");
+                final String mnem = line.substring(first, last);
+                final int size = Character.getNumericValue(line.charAt(20));
 
-                Instruction instr = new Instruction(mnem, size);
+                final Instruction instr = new Instruction(mnem, size);
                 table[count] = instr;
                 count++;
             }
@@ -111,11 +111,11 @@ class Disassembler {
         digits = String.valueOf(end).length();
     }
 
-    private String output1Byte(Instruction instr) {
+    private String output1Byte(final Instruction instr) {
         return String.format("%04x %s", index, instr.mnem);
     }
 
-    private String output2Byte(Instruction instr, int operand) {
+    private String output2Byte(final Instruction instr, final int operand) {
         if (instr.mnem.contains("out") || instr.mnem.contains("in")) {
             return String.format("%04x %s$%02x", index, instr.mnem, operand);
         }
@@ -123,7 +123,7 @@ class Disassembler {
         return String.format("%04x %s#%02x", index, instr.mnem, operand);
     }
 
-    private String output3Byte(Instruction instr, int[] operand) {
+    private String output3Byte(final Instruction instr, final int[] operand) {
         if (instr.mnem.contains("lxi")) {
             return String.format("%04x %s#%02x%02x", index, instr.mnem, 
                 operand[0], operand[1]);
@@ -136,26 +136,26 @@ class Disassembler {
     public void run() {
         while (index < end) {
             // Convert signed byte 
-            int b = (int)data[index] & 0xff;
-            Instruction instr = INSTRUCTION_TABLE[b];
+            final int b = data[index] & 0xff;
+            final Instruction instr = INSTRUCTION_TABLE[b];
             String msg = null;
 
             if (instr.size == 1) {
                 msg = output1Byte(instr);
             } else if (instr.size == 2) {
-                int operand = (int)data[index + 1] & 0xff;
+                int operand = data[index + 1] & 0xff;
                 msg = output2Byte(instr, operand);
             } else if (instr.size == 3) {
                 int[] operand = new int[2];
-                operand[0] = (int)data[index + 2] & 0xff;
-                operand[1] = (int)data[index + 1] & 0xff;
+                operand[0] = data[index + 2] & 0xff;
+                operand[1] = data[index + 1] & 0xff;
                 msg = output3Byte(instr, operand);
             }
 
             index += instr.size;
 
             System.out.println(msg);
-            logger.log(Level.INFO, msg);
+            logger.log(Level.FINE, msg);
         }
     }
 
